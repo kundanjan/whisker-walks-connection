@@ -5,6 +5,9 @@ import {
   User
 } from "@/types";
 
+// Use a more generic client that doesn't enforce strict typing
+const supabaseClient = supabase as any;
+
 // User API
 export async function fetchCurrentUser(): Promise<User | null> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -54,10 +57,9 @@ export async function fetchUsers(): Promise<User[]> {
 
 // Pets API
 export async function fetchPets(): Promise<Pet[]> {
-  // Use any type to bypass TypeScript's strict typing for Supabase
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('pets')
-    .select('*') as any;
+    .select('*');
   
   if (error) {
     console.error('Error fetching pets:', error);
@@ -80,9 +82,9 @@ export async function fetchPets(): Promise<Pet[]> {
 
 // Providers API
 export async function fetchProviders(): Promise<Provider[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('providers')
-    .select('*') as any;
+    .select('*');
   
   if (error) {
     console.error('Error fetching providers:', error);
@@ -104,11 +106,11 @@ export async function fetchProviders(): Promise<Provider[]> {
 }
 
 export async function fetchProviderById(id: string): Promise<Provider | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('providers')
     .select('*')
     .eq('id', id)
-    .single() as any;
+    .single();
   
   if (error) {
     console.error(`Error fetching provider ${id}:`, error);
@@ -131,9 +133,9 @@ export async function fetchProviderById(id: string): Promise<Provider | null> {
 
 // Services API
 export async function fetchServices(): Promise<Service[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('services')
-    .select('*') as any;
+    .select('*');
   
   if (error) {
     console.error('Error fetching services:', error);
@@ -153,10 +155,10 @@ export async function fetchServices(): Promise<Service[]> {
 }
 
 export async function fetchServicesByProviderId(providerId: string): Promise<Service[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('services')
     .select('*')
-    .eq('provider_id', providerId) as any;
+    .eq('provider_id', providerId);
   
   if (error) {
     console.error(`Error fetching services for provider ${providerId}:`, error);
@@ -177,9 +179,9 @@ export async function fetchServicesByProviderId(providerId: string): Promise<Ser
 
 // Bookings API
 export async function fetchBookings(): Promise<Booking[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('bookings')
-    .select('*') as any;
+    .select('*');
   
   if (error) {
     console.error('Error fetching bookings:', error);
@@ -201,9 +203,9 @@ export async function fetchBookings(): Promise<Booking[]> {
 
 // Reviews API
 export async function fetchReviews(): Promise<Review[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('reviews')
-    .select('*') as any;
+    .select('*');
   
   if (error) {
     console.error('Error fetching reviews:', error);
@@ -222,10 +224,10 @@ export async function fetchReviews(): Promise<Review[]> {
 }
 
 export async function fetchReviewsByProviderId(providerId: string): Promise<Review[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('reviews')
     .select('*')
-    .eq('provider_id', providerId) as any;
+    .eq('provider_id', providerId);
   
   if (error) {
     console.error(`Error fetching reviews for provider ${providerId}:`, error);
