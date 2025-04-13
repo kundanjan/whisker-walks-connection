@@ -1,10 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
 const CtaSection = () => {
-  return (
-    <section className="py-16 bg-brand-teal">
+  return <section className="py-16 bg-brand-teal">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
@@ -19,7 +16,7 @@ const CtaSection = () => {
                 </Button>
               </Link>
               <Link to="/services">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
+                <Button size="lg" variant="outline" className="border-white bg-slate-50 text-teal-400">
                   Explore Services
                 </Button>
               </Link>
@@ -27,16 +24,10 @@ const CtaSection = () => {
           </div>
           
           <div className="hidden lg:flex justify-end">
-            <img 
-              src="https://images.unsplash.com/photo-1560807707-8cc77767d783?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Happy dog with owner" 
-              className="rounded-lg shadow-xl w-4/5 h-auto"
-            />
+            <img src="https://images.unsplash.com/photo-1560807707-8cc77767d783?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Happy dog with owner" className="rounded-lg shadow-xl w-4/5 h-auto" />
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CtaSection;
