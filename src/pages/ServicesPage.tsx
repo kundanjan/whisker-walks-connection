@@ -4,25 +4,13 @@ import ServicesList from '../components/services/ServicesList';
 import { useEffect, useState } from 'react';
 import { fetchServices } from '@/services/api';
 import { Service } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 const ServicesPage = () => {
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const data = await fetchServices();
-        setServices(data);
-      } catch (error) {
-        console.error('Error loading services:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadServices();
-  }, []);
+  const { data: services = [], isLoading } = useQuery({
+    queryKey: ['services'],
+    queryFn: fetchServices
+  });
 
   return (
     <Layout>
@@ -34,7 +22,7 @@ const ServicesPage = () => {
           </p>
         </div>
       </div>
-      {loading ? (
+      {isLoading ? (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <p>Loading services...</p>
         </div>

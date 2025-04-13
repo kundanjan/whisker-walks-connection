@@ -23,9 +23,9 @@ export async function fetchCurrentUser(): Promise<User | null> {
     email: session.user.email || '',
     name: profile.name,
     role: profile.role as any,
-    avatar: profile.avatar_url,
-    phone: profile.phone,
-    address: profile.address,
+    avatar: null, // Default as null since we don't have this field yet
+    phone: null, // Default as null since we don't have this field yet
+    address: null, // Default as null since we don't have this field yet
     createdAt: profile.created_at
   };
 }
@@ -45,15 +45,16 @@ export async function fetchUsers(): Promise<User[]> {
     email: '',  // Email not exposed in profiles table for privacy
     name: profile.name,
     role: profile.role as any,
-    avatar: profile.avatar_url,
-    phone: profile.phone,
-    address: profile.address,
+    avatar: null, // Default as null since we don't have this field yet
+    phone: null, // Default as null since we don't have this field yet
+    address: null, // Default as null since we don't have this field yet
     createdAt: profile.created_at
   }));
 }
 
 // Pets API
 export async function fetchPets(): Promise<Pet[]> {
+  // We should use a more manual approach to avoid type issues with Supabase
   const { data, error } = await supabase
     .from('pets')
     .select('*');
@@ -63,7 +64,7 @@ export async function fetchPets(): Promise<Pet[]> {
     return [];
   }
   
-  return data.map(pet => ({
+  return data.map((pet: any) => ({
     id: pet.id,
     ownerId: pet.owner_id,
     name: pet.name,
@@ -88,7 +89,7 @@ export async function fetchProviders(): Promise<Provider[]> {
     return [];
   }
   
-  return data.map(provider => ({
+  return data.map((provider: any) => ({
     id: provider.id,
     userId: provider.user_id,
     bio: provider.bio,
@@ -139,7 +140,7 @@ export async function fetchServices(): Promise<Service[]> {
     return [];
   }
   
-  return data.map(service => ({
+  return data.map((service: any) => ({
     id: service.id,
     providerId: service.provider_id,
     type: service.type as any,
@@ -162,7 +163,7 @@ export async function fetchServicesByProviderId(providerId: string): Promise<Ser
     return [];
   }
   
-  return data.map(service => ({
+  return data.map((service: any) => ({
     id: service.id,
     providerId: service.provider_id,
     type: service.type as any,
@@ -185,7 +186,7 @@ export async function fetchBookings(): Promise<Booking[]> {
     return [];
   }
   
-  return data.map(booking => ({
+  return data.map((booking: any) => ({
     id: booking.id,
     petId: booking.pet_id,
     providerId: booking.provider_id,
@@ -209,7 +210,7 @@ export async function fetchReviews(): Promise<Review[]> {
     return [];
   }
   
-  return data.map(review => ({
+  return data.map((review: any) => ({
     id: review.id,
     bookingId: review.booking_id,
     userId: review.user_id,
@@ -231,7 +232,7 @@ export async function fetchReviewsByProviderId(providerId: string): Promise<Revi
     return [];
   }
   
-  return data.map(review => ({
+  return data.map((review: any) => ({
     id: review.id,
     bookingId: review.booking_id,
     userId: review.user_id,
