@@ -1,6 +1,5 @@
-
 import { Link } from "react-router-dom";
-import { Walking, Scissors, Home, Dumbbell, HeartPulse } from "lucide-react";
+import { Dog, Scissors, Home, Dumbbell, HeartPulse } from "lucide-react";
 
 interface ServiceCardProps {
   icon: React.ReactNode;
@@ -26,7 +25,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, lin
 const ServicesSection = () => {
   const services = [
     {
-      icon: <Walking className="h-6 w-6 text-white" />,
+      icon: <Dog className="h-6 w-6 text-white" />,
       title: "Dog Walking",
       description: "Regular walks to keep your dog healthy and happy, with GPS tracking and real-time updates.",
       link: "/services/walking",
