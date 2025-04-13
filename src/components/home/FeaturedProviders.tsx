@@ -1,13 +1,48 @@
 
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { providers } from '@/data/mockData';
-import { users } from '@/data/mockData';
 import { Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { fetchProviders, fetchUsers } from '@/services/api';
+import { Provider, User } from '@/types';
 
 const FeaturedProviders = () => {
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [providersData, usersData] = await Promise.all([
+          fetchProviders(),
+          fetchUsers()
+        ]);
+        
+        setProviders(providersData);
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error loading featured providers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, []);
+
   // Get first 3 providers
   const featuredProviders = providers.slice(0, 3);
+  
+  if (loading) {
+    return (
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>Loading featured providers...</p>
+        </div>
+      </section>
+    );
+  }
   
   return (
     <section className="py-16">
@@ -20,60 +55,66 @@ const FeaturedProviders = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredProviders.map((provider) => {
-            const user = users.find(u => u.id === provider.userId);
-            if (!user) return null;
-            
-            return (
-              <div key={provider.id} className="provider-card">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center">
-                    <img 
-                      src={user.avatar} 
-                      alt={user.name} 
-                      className="h-16 w-16 rounded-full object-cover mr-4"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-lg">{user.name}</h3>
-                      <div className="flex items-center">
-                        <div className="flex items-center text-yellow-400 mr-1">
-                          <Star className="h-4 w-4 fill-current" />
+          {featuredProviders.length > 0 ? (
+            featuredProviders.map((provider) => {
+              const user = users.find(u => u.id === provider.userId);
+              if (!user) return null;
+              
+              return (
+                <div key={provider.id} className="provider-card">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center">
+                      <img 
+                        src={user.avatar || '/placeholder.svg'} 
+                        alt={user.name} 
+                        className="h-16 w-16 rounded-full object-cover mr-4"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-lg">{user.name}</h3>
+                        <div className="flex items-center">
+                          <div className="flex items-center text-yellow-400 mr-1">
+                            <Star className="h-4 w-4 fill-current" />
+                          </div>
+                          <span className="text-gray-700">{provider.rating}</span>
+                          <span className="text-gray-500 text-sm ml-1">({provider.reviewCount} reviews)</span>
                         </div>
-                        <span className="text-gray-700">{provider.rating}</span>
-                        <span className="text-gray-500 text-sm ml-1">({provider.reviewCount} reviews)</span>
                       </div>
                     </div>
-                  </div>
-                  {provider.verified && (
-                    <span className="flex items-center text-xs font-medium text-green-600">
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Verified
-                    </span>
-                  )}
-                </div>
-                
-                <p className="text-gray-600 line-clamp-3 mb-4">{provider.bio}</p>
-                
-                <div className="mb-4">
-                  <h4 className="font-medium text-sm mb-2">Specialties:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {provider.specialties.map((specialty, index) => (
-                      <span 
-                        key={index}
-                        className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700"
-                      >
-                        {specialty}
+                    {provider.verified && (
+                      <span className="flex items-center text-xs font-medium text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Verified
                       </span>
-                    ))}
+                    )}
                   </div>
+                  
+                  <p className="text-gray-600 line-clamp-3 mb-4">{provider.bio}</p>
+                  
+                  <div className="mb-4">
+                    <h4 className="font-medium text-sm mb-2">Specialties:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {provider.specialties.map((specialty, index) => (
+                        <span 
+                          key={index}
+                          className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <Link to={`/providers/${provider.id}`} className="mt-auto">
+                    <Button className="w-full" variant="outline">View Profile</Button>
+                  </Link>
                 </div>
-                
-                <Link to={`/providers/${provider.id}`} className="mt-auto">
-                  <Button className="w-full" variant="outline">View Profile</Button>
-                </Link>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <div className="col-span-3 text-center py-8">
+              <p className="text-gray-500">No featured providers available yet.</p>
+            </div>
+          )}
         </div>
         
         <div className="text-center mt-10">

@@ -1,10 +1,10 @@
-
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ServiceCard from './ServiceCard';
 import { ServiceType, Service } from '@/types';
+import { fetchServices } from '@/services/api';
 import {
   Select,
   SelectContent,
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion";
 
 interface ServicesListProps {
-  services: Service[];
+  services?: Service[];
 }
 
 const ServiceTypeOptions: { value: ServiceType; label: string }[] = [
@@ -31,36 +31,61 @@ const ServiceTypeOptions: { value: ServiceType; label: string }[] = [
   { value: 'veterinary', label: 'Veterinary' },
 ];
 
-const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
+const ServicesList: React.FC<ServicesListProps> = ({ services: propServices }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<ServiceType | ''>('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
   const [durationRange, setDurationRange] = useState<[number, number]>([0, 180]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(!propServices);
+
+  useEffect(() => {
+    if (propServices) {
+      setServices(propServices);
+      return;
+    }
+
+    const loadServices = async () => {
+      try {
+        const data = await fetchServices();
+        setServices(data);
+      } catch (error) {
+        console.error('Error loading services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadServices();
+  }, [propServices]);
 
   const filteredServices = useMemo(() => {
     return services.filter(service => {
-      // Text search
       const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.description.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Type filter
       const matchesType = selectedType === '' || service.type === selectedType;
       
-      // Price range filter
       const matchesPrice = service.price >= priceRange[0] && service.price <= priceRange[1];
       
-      // Duration range filter
       const matchesDuration = service.duration >= durationRange[0] && service.duration <= durationRange[1];
       
       return matchesSearch && matchesType && matchesPrice && matchesDuration;
     });
   }, [services, searchTerm, selectedType, priceRange, durationRange]);
 
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+        <p>Loading services...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filters - Desktop */}
         <div className="hidden md:block w-64 flex-shrink-0">
           <div className="bg-white rounded-lg border p-4 sticky top-20">
             <h3 className="font-semibold text-lg mb-4">Filters</h3>
@@ -146,9 +171,7 @@ const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
           </div>
         </div>
         
-        {/* Services List */}
         <div className="flex-1">
-          {/* Search & Mobile Filter Controls */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -169,7 +192,6 @@ const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
             </Button>
           </div>
           
-          {/* Mobile Filters */}
           {showMobileFilters && (
             <Accordion type="single" collapsible className="md:hidden mb-6 bg-white rounded-lg border">
               <AccordionItem value="filters">
@@ -258,12 +280,10 @@ const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
             </Accordion>
           )}
           
-          {/* Results Count */}
           <h2 className="text-lg font-semibold mb-4">
             {filteredServices.length} {filteredServices.length === 1 ? 'Service' : 'Services'} Available
           </h2>
           
-          {/* Services Grid */}
           {filteredServices.length === 0 ? (
             <div className="text-center py-12">
               <h3 className="text-lg font-medium text-gray-700 mb-2">No services match your criteria</h3>
