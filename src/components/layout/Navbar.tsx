@@ -1,11 +1,19 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User, PawPrint } from 'lucide-react';
+import { Menu, X, Search, User, PawPrint, LogOut } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <nav className="bg-white border-b sticky top-0 z-50">
@@ -40,12 +48,30 @@ const Navbar = () => {
             <Button variant="outline" size="icon" className="rounded-full">
               <Search className="h-4 w-4" />
             </Button>
-            <Link to="/login">
-              <Button variant="ghost">Log in</Button>
-            </Link>
-            <Link to="/signup">
-              <Button>Sign up</Button>
-            </Link>
+            
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <Link to="/profile">
+                  <Button variant="ghost" className="flex items-center space-x-1">
+                    <User className="h-4 w-4 mr-1" />
+                    Profile
+                  </Button>
+                </Link>
+                <Button variant="outline" onClick={handleSignOut} className="flex items-center">
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Sign out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost">Log in</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button>Sign up</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -93,20 +119,49 @@ const Navbar = () => {
               Resources
             </Link>
             <div className="border-t pt-2 mt-2">
-              <Link 
-                to="/login" 
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Log in
-              </Link>
-              <Link 
-                to="/signup" 
-                className="block px-3 py-2 mt-1 rounded-md text-base font-medium bg-brand-teal text-white hover:bg-brand-teal/90"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign up
-              </Link>
+              {user ? (
+                <>
+                  <Link 
+                    to="/profile" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 mr-2" />
+                      Profile
+                    </div>
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    <div className="flex items-center">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign out
+                    </div>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Log in
+                  </Link>
+                  <Link 
+                    to="/signup" 
+                    className="block px-3 py-2 mt-1 rounded-md text-base font-medium bg-brand-teal text-white hover:bg-brand-teal/90"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
