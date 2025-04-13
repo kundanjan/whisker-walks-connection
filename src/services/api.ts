@@ -54,10 +54,10 @@ export async function fetchUsers(): Promise<User[]> {
 
 // Pets API
 export async function fetchPets(): Promise<Pet[]> {
-  // We should use a more manual approach to avoid type issues with Supabase
+  // Use any type to bypass TypeScript's strict typing for Supabase
   const { data, error } = await supabase
     .from('pets')
-    .select('*');
+    .select('*') as any;
   
   if (error) {
     console.error('Error fetching pets:', error);
@@ -82,7 +82,7 @@ export async function fetchPets(): Promise<Pet[]> {
 export async function fetchProviders(): Promise<Provider[]> {
   const { data, error } = await supabase
     .from('providers')
-    .select('*');
+    .select('*') as any;
   
   if (error) {
     console.error('Error fetching providers:', error);
@@ -108,7 +108,7 @@ export async function fetchProviderById(id: string): Promise<Provider | null> {
     .from('providers')
     .select('*')
     .eq('id', id)
-    .single();
+    .single() as any;
   
   if (error) {
     console.error(`Error fetching provider ${id}:`, error);
@@ -133,7 +133,7 @@ export async function fetchProviderById(id: string): Promise<Provider | null> {
 export async function fetchServices(): Promise<Service[]> {
   const { data, error } = await supabase
     .from('services')
-    .select('*');
+    .select('*') as any;
   
   if (error) {
     console.error('Error fetching services:', error);
@@ -156,7 +156,7 @@ export async function fetchServicesByProviderId(providerId: string): Promise<Ser
   const { data, error } = await supabase
     .from('services')
     .select('*')
-    .eq('provider_id', providerId);
+    .eq('provider_id', providerId) as any;
   
   if (error) {
     console.error(`Error fetching services for provider ${providerId}:`, error);
@@ -179,7 +179,7 @@ export async function fetchServicesByProviderId(providerId: string): Promise<Ser
 export async function fetchBookings(): Promise<Booking[]> {
   const { data, error } = await supabase
     .from('bookings')
-    .select('*');
+    .select('*') as any;
   
   if (error) {
     console.error('Error fetching bookings:', error);
@@ -203,7 +203,7 @@ export async function fetchBookings(): Promise<Booking[]> {
 export async function fetchReviews(): Promise<Review[]> {
   const { data, error } = await supabase
     .from('reviews')
-    .select('*');
+    .select('*') as any;
   
   if (error) {
     console.error('Error fetching reviews:', error);
@@ -225,7 +225,7 @@ export async function fetchReviewsByProviderId(providerId: string): Promise<Revi
   const { data, error } = await supabase
     .from('reviews')
     .select('*')
-    .eq('provider_id', providerId);
+    .eq('provider_id', providerId) as any;
   
   if (error) {
     console.error(`Error fetching reviews for provider ${providerId}:`, error);
