@@ -73,7 +73,7 @@ const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
                     <SelectValue placeholder="All Services" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Services</SelectItem>
+                    <SelectItem value="all">All Services</SelectItem>
                     {ServiceTypeOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -183,7 +183,7 @@ const ServicesList: React.FC<ServicesListProps> = ({ services }) => {
                           <SelectValue placeholder="All Services" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All Services</SelectItem>
+                          <SelectItem value="all">All Services</SelectItem>
                           {ServiceTypeOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
