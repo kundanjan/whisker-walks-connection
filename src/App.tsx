@@ -15,6 +15,7 @@ import SignUp from "./pages/Auth/SignUp";
 import Login from "./pages/Auth/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Layout from "./components/layout/Layout";
 
 const queryClient = new QueryClient();
 
@@ -26,15 +27,21 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/services/:id" element={<ServiceDetail />} />
-            <Route path="/providers" element={<ProvidersPage />} />
-            <Route path="/providers/:id" element={<ProviderDetail />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
+            <Route path="/services/:id" element={<Layout><ServiceDetail /></Layout>} />
+            <Route path="/providers" element={<Layout><ProvidersPage /></Layout>} />
+            <Route path="/providers/:id" element={<Layout><ProviderDetail /></Layout>} />
+            <Route path="/signup" element={<Layout><SignUp /></Layout>} />
+            <Route path="/login" element={<Layout><Login /></Layout>} />
+            <Route path="/admin" element={
+              <Layout>
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              </Layout>
+            } />
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

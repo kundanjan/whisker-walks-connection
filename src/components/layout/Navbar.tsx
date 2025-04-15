@@ -2,13 +2,23 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User, PawPrint, LogOut } from 'lucide-react';
+import { Menu, X, Search, User, PawPrint, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCurrentUser } from '@/services/api';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const { data: profile } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: fetchCurrentUser,
+    enabled: !!user
+  });
+
+  const isAdmin = profile?.is_admin || false;
 
   const handleSignOut = async () => {
     await signOut();
@@ -41,6 +51,11 @@ const Navbar = () => {
             <Link to="/resources" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
               Resources
             </Link>
+            {isAdmin && (
+              <Link to="/admin" className="px-3 py-2 rounded-md text-sm font-medium text-brand-teal hover:bg-gray-100">
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* Search and Auth Buttons */}
@@ -57,6 +72,14 @@ const Navbar = () => {
                     Profile
                   </Button>
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="ghost" className="flex items-center">
+                      <Settings className="h-4 w-4 mr-1" />
+                      Admin
+                    </Button>
+                  </Link>
+                )}
                 <Button variant="outline" onClick={handleSignOut} className="flex items-center">
                   <LogOut className="h-4 w-4 mr-1" />
                   Sign out
@@ -118,6 +141,15 @@ const Navbar = () => {
             >
               Resources
             </Link>
+            {isAdmin && (
+              <Link 
+                to="/admin" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-brand-teal hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
+              </Link>
+            )}
             <div className="border-t pt-2 mt-2">
               {user ? (
                 <>
@@ -131,6 +163,18 @@ const Navbar = () => {
                       Profile
                     </div>
                   </Link>
+                  {isAdmin && (
+                    <Link 
+                      to="/admin" 
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="flex items-center">
+                        <Settings className="h-4 w-4 mr-2" />
+                        Admin
+                      </div>
+                    </Link>
+                  )}
                   <button 
                     onClick={() => {
                       handleSignOut();
