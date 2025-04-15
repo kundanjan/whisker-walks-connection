@@ -1,4 +1,3 @@
-
 export type UserRole = 'pet-owner' | 'provider' | 'admin';
 
 export interface User {
@@ -11,6 +10,7 @@ export interface User {
   phone?: string;
   address?: string;
   createdAt: string;
+  banned?: boolean;
 }
 
 export interface Pet {
