@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      analytics_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           created_at: string
@@ -122,6 +146,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_admin: boolean | null
           name: string
           role: string
           updated_at: string
@@ -129,6 +154,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id: string
+          is_admin?: boolean | null
           name: string
           role: string
           updated_at?: string
@@ -136,6 +162,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          is_admin?: boolean | null
           name?: string
           role?: string
           updated_at?: string
@@ -279,12 +306,45 @@ export type Database = {
           },
         ]
       }
+      user_bans: {
+        Row: {
+          active: boolean | null
+          banned_by: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean | null
+          banned_by: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean | null
+          banned_by?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_user_banned: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

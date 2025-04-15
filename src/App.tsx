@@ -13,6 +13,7 @@ import ProvidersPage from "./pages/ProvidersPage";
 import ProviderDetail from "./pages/ProviderDetail";
 import SignUp from "./pages/Auth/SignUp";
 import Login from "./pages/Auth/Login";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/providers/:id" element={<ProviderDetail />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

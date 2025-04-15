@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Pet, Provider, Service, Booking, Review,
@@ -26,9 +25,10 @@ export async function fetchCurrentUser(): Promise<User | null> {
     email: session.user.email || '',
     name: profile.name,
     role: profile.role as any,
-    avatar: null, // Default as null since we don't have this field yet
-    phone: null, // Default as null since we don't have this field yet
-    address: null, // Default as null since we don't have this field yet
+    is_admin: profile.is_admin || false,
+    avatar: null,
+    phone: null,
+    address: null,
     createdAt: profile.created_at
   };
 }
@@ -48,9 +48,9 @@ export async function fetchUsers(): Promise<User[]> {
     email: '',  // Email not exposed in profiles table for privacy
     name: profile.name,
     role: profile.role as any,
-    avatar: null, // Default as null since we don't have this field yet
-    phone: null, // Default as null since we don't have this field yet
-    address: null, // Default as null since we don't have this field yet
+    avatar: null,
+    phone: null,
+    address: null,
     createdAt: profile.created_at
   }));
 }
