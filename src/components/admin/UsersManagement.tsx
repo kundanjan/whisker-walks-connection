@@ -12,10 +12,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
+import { User } from '@/types';
 
 export function UsersManagement() {
   const queryClient = useQueryClient();
-  const { data: users } = useQuery({
+  const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers
   });
@@ -29,7 +30,7 @@ export function UsersManagement() {
         variant: "default",
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: "Failed to ban user",
         description: error.message,
@@ -47,7 +48,7 @@ export function UsersManagement() {
         variant: "default",
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: "Failed to unban user",
         description: error.message,
@@ -55,6 +56,10 @@ export function UsersManagement() {
       });
     },
   });
+
+  if (isLoading) {
+    return <div>Loading users...</div>;
+  }
 
   return (
     <div className="rounded-md border">
@@ -69,7 +74,7 @@ export function UsersManagement() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users?.map((user) => (
+          {users.map((user: User) => (
             <TableRow key={user.id}>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>

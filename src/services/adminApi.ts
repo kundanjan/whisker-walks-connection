@@ -1,5 +1,32 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@/types";
+
+export async function fetchUsers() {
+  // Fetch users with ban status information
+  const { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('*');
+
+  if (error) throw error;
+  
+  // Get ban information for all users
+  const { data: bans } = await supabase
+    .from('user_bans')
+    .select('*')
+    .eq('active', true);
+
+  // Map profiles to User objects and add banned status
+  return profiles.map(profile => ({
+    id: profile.id,
+    email: '', // Email not exposed in profiles table for privacy
+    name: profile.name,
+    role: profile.role,
+    is_admin: profile.is_admin || false,
+    createdAt: profile.created_at,
+    banned: bans?.some(ban => ban.user_id === profile.id) || false
+  })) as User[];
+}
 
 export async function fetchAnalyticsStats() {
   const { data: users } = await supabase.from('profiles').select('count');
