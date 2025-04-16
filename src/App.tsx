@@ -14,6 +14,8 @@ import ProviderDetail from "./pages/ProviderDetail";
 import SignUp from "./pages/Auth/SignUp";
 import Login from "./pages/Auth/Login";
 import AdminDashboard from "./pages/AdminDashboard";
+import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Layout from "./components/layout/Layout";
 import { AdminGuard } from "./components/admin/AdminGuard";
@@ -36,6 +38,8 @@ const App = () => (
               <Route path="/providers/:id" element={<ProviderDetail />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <AdminGuard>
