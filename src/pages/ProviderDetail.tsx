@@ -1,7 +1,5 @@
-
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { providers, users, services, reviews } from '@/data/mockData';
@@ -45,7 +43,7 @@ const ProviderDetail = () => {
   };
   
   return (
-    <Layout>
+    <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Provider Header */}
         <div className="flex flex-col md:flex-row gap-6 items-start mb-8">
@@ -281,7 +279,7 @@ const ProviderDetail = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </Layout>
+    </>
   );
 };
 

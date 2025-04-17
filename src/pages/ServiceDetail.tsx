@@ -1,7 +1,5 @@
-
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { 
@@ -51,10 +49,8 @@ const ServiceDetail = () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // In a real app, this would submit the booking
       setBookingModalOpen(false);
       setStep(1);
-      // Show success message
     }
   };
   
@@ -65,12 +61,10 @@ const ServiceDetail = () => {
   };
   
   return (
-    <Layout>
+    <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Breadcrumbs */}
             <nav className="mb-4">
               <ol className="flex text-sm">
                 <li className="text-gray-500">
@@ -85,14 +79,12 @@ const ServiceDetail = () => {
               </ol>
             </nav>
             
-            {/* Service Image */}
             {service.imageUrl && (
               <div className="rounded-lg overflow-hidden h-[300px] mb-6">
                 <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
               </div>
             )}
             
-            {/* Service Title & Basic Info */}
             <div className="mb-6">
               <h1 className="text-3xl font-bold mb-4">{service.title}</h1>
               
@@ -109,7 +101,6 @@ const ServiceDetail = () => {
               </div>
             </div>
             
-            {/* Service Description */}
             <div className="prose max-w-none mb-8">
               <h2>Service Description</h2>
               <p>{service.description}</p>
@@ -130,9 +121,7 @@ const ServiceDetail = () => {
             </div>
           </div>
           
-          {/* Sidebar */}
           <div className="lg:w-1/3">
-            {/* Provider Card */}
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle>Provider Information</CardTitle>
@@ -178,7 +167,6 @@ const ServiceDetail = () => {
               </CardContent>
             </Card>
             
-            {/* Booking Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Book this Service</CardTitle>
@@ -202,7 +190,6 @@ const ServiceDetail = () => {
         </div>
       </div>
       
-      {/* Booking Modal */}
       <Dialog open={bookingModalOpen} onOpenChange={setBookingModalOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -212,7 +199,6 @@ const ServiceDetail = () => {
             </DialogDescription>
           </DialogHeader>
           
-          {/* Step 1: Choose Date */}
           {step === 1 && (
             <>
               <div className="py-4">
@@ -237,7 +223,6 @@ const ServiceDetail = () => {
             </>
           )}
           
-          {/* Step 2: Choose Time */}
           {step === 2 && (
             <>
               <div className="py-4">
@@ -260,7 +245,6 @@ const ServiceDetail = () => {
             </>
           )}
           
-          {/* Step 3: Pet Details */}
           {step === 3 && (
             <>
               <div className="py-4">
@@ -303,7 +287,7 @@ const ServiceDetail = () => {
           )}
         </DialogContent>
       </Dialog>
-    </Layout>
+    </>
   );
 };
 

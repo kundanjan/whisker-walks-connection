@@ -17,7 +17,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserRole } from '@/types';
-import Layout from '@/components/layout/Layout';
 import { useAuth } from '@/context/AuthContext';
 
 const signupSchema = z.object({
@@ -78,123 +77,121 @@ const SignUp = () => {
   };
 
   return (
-    <Layout>
-      <div className="max-w-md mx-auto px-4 py-16">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Create an Account</CardTitle>
-            <CardDescription>
-              Join WhiskerWalks to connect with pet care services
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="pet-owner" onValueChange={handleRoleChange}>
-              <TabsList className="grid grid-cols-2 w-full mb-6">
-                <TabsTrigger value="pet-owner">Pet Owner</TabsTrigger>
-                <TabsTrigger value="provider">Service Provider</TabsTrigger>
-              </TabsList>
-              <TabsContent value="pet-owner">
-                <p className="text-sm text-gray-500 mb-4">
-                  Sign up as a pet owner to book services for your pets.
-                </p>
-              </TabsContent>
-              <TabsContent value="provider">
-                <p className="text-sm text-gray-500 mb-4">
-                  Sign up as a service provider to offer your pet care services.
-                </p>
-              </TabsContent>
-            </Tabs>
+    <div className="max-w-md mx-auto px-4 py-16">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Create an Account</CardTitle>
+          <CardDescription>
+            Join WhiskerWalks to connect with pet care services
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="pet-owner" onValueChange={handleRoleChange}>
+            <TabsList className="grid grid-cols-2 w-full mb-6">
+              <TabsTrigger value="pet-owner">Pet Owner</TabsTrigger>
+              <TabsTrigger value="provider">Service Provider</TabsTrigger>
+            </TabsList>
+            <TabsContent value="pet-owner">
+              <p className="text-sm text-gray-500 mb-4">
+                Sign up as a pet owner to book services for your pets.
+              </p>
+            </TabsContent>
+            <TabsContent value="provider">
+              <p className="text-sm text-gray-500 mb-4">
+                Sign up as a service provider to offer your pet care services.
+              </p>
+            </TabsContent>
+          </Tabs>
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter your full name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Enter your email address"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Create a password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Confirm your password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Creating Account...' : 'Create Account'}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-gray-500">
-              Already have an account?{" "}
-              <Link to="/login" className="text-brand-teal hover:underline font-medium">
-                Log in
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-      </div>
-    </Layout>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your full name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Enter your email address"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Create a password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Confirm your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Creating Account...' : 'Create Account'}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-gray-500">
+            Already have an account?{" "}
+            <Link to="/login" className="text-brand-teal hover:underline font-medium">
+              Log in
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 
