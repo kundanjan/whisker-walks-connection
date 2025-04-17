@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
 import { Search, MapPin, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -67,16 +66,14 @@ const ProvidersPage = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <p>Loading providers...</p>
-        </div>
-      </Layout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <p>Loading providers...</p>
+      </div>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="bg-brand-blue/10 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Pet Care Providers</h1>
@@ -180,18 +177,8 @@ const ProvidersPage = () => {
             </div>
           )}
         </div>
-        
-        {filteredProviders.length === 0 && (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-medium text-gray-700 mb-2">No providers match your criteria</h3>
-            <p className="text-gray-500 mb-4">Try adjusting your filters or search term</p>
-            <Button variant="outline" onClick={() => { setSearchTerm(''); setServiceFilter(null); }}>
-              Clear Filters
-            </Button>
-          </div>
-        )}
       </div>
-    </Layout>
+    </>
   );
 };
 
