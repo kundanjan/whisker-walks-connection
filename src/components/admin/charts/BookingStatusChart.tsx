@@ -1,4 +1,3 @@
-
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
@@ -39,7 +38,7 @@ export function BookingStatusChart() {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Legend />
+            <Legend verticalAlign="bottom" height={36} />
             <ChartTooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {

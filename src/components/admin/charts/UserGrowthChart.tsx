@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { Button } from "@/components/ui/button";
 
-// Sample data for user growth chart
+// Sample data for user and provider growth
 const data = {
   weekly: [
     { name: "Mon", users: 10, providers: 2 },
@@ -49,29 +48,29 @@ export function UserGrowthChart() {
   return (
     <div className="space-y-4">
       <div className="flex space-x-2">
-        <Button 
-          variant={timeframe === "weekly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "weekly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("weekly")}
         >
           Weekly
         </Button>
-        <Button 
-          variant={timeframe === "monthly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "monthly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("monthly")}
         >
           Monthly
         </Button>
-        <Button 
-          variant={timeframe === "yearly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "yearly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("yearly")}
         >
           Yearly
         </Button>
       </div>
-      <div className="h-[300px]">
+      <div className="flex-grow h-full min-h-[300px] max-h-[500px]">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data[timeframe]} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
@@ -92,19 +91,19 @@ export function UserGrowthChart() {
                   return null;
                 }}
               />
-              <Line 
-                type="monotone" 
-                dataKey="users" 
-                stroke="#0ea5e9" 
+              <Line
+                type="monotone"
+                dataKey="users"
+                stroke="#0ea5e9"
                 activeDot={{ r: 8 }}
-                strokeWidth={2} 
+                strokeWidth={2}
               />
-              <Line 
-                type="monotone" 
-                dataKey="providers" 
-                stroke="#f97316" 
+              <Line
+                type="monotone"
+                dataKey="providers"
+                stroke="#f97316"
                 activeDot={{ r: 6 }}
-                strokeWidth={2} 
+                strokeWidth={2}
               />
             </LineChart>
           </ResponsiveContainer>

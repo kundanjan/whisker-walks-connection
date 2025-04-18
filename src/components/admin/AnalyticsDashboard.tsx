@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAnalyticsStats } from "@/services/adminApi";
@@ -13,8 +12,8 @@ import { CalendarRange, BarChart2, Users, Activity, ArrowUpRight } from "lucide-
 export function AnalyticsDashboard() {
   const [dateRange, setDateRange] = useState<"weekly" | "monthly" | "yearly">("monthly");
   const { data: stats } = useQuery({
-    queryKey: ['analytics-stats'],
-    queryFn: fetchAnalyticsStats
+    queryKey: ["analytics-stats"],
+    queryFn: fetchAnalyticsStats,
   });
 
   return (
@@ -36,7 +35,7 @@ export function AnalyticsDashboard() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
@@ -52,7 +51,7 @@ export function AnalyticsDashboard() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Providers</CardTitle>
@@ -68,7 +67,7 @@ export function AnalyticsDashboard() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -85,7 +84,7 @@ export function AnalyticsDashboard() {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Tabs for different charts */}
       <Tabs defaultValue="revenue" className="space-y-4">
         <TabsList>
@@ -94,32 +93,34 @@ export function AnalyticsDashboard() {
           <TabsTrigger value="bookings">Bookings</TabsTrigger>
           <TabsTrigger value="providers">Provider Performance</TabsTrigger>
         </TabsList>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-7 lg:col-span-5">
+          {/* Main Chart View */}
+          <Card className="col-span-7 lg:col-span-5 flex flex-col overflow-hidden h-full">
             <CardHeader>
               <CardTitle>Analytics Dashboard</CardTitle>
             </CardHeader>
-            <CardContent className="pl-2">
-              <TabsContent value="revenue" className="mt-0">
+            <CardContent className="h-full">
+              <TabsContent value="revenue" className="h-full">
                 <RevenueChart />
               </TabsContent>
-              
-              <TabsContent value="users" className="mt-0">
+
+              <TabsContent value="users" className="h-full">
                 <UserGrowthChart />
               </TabsContent>
-              
-              <TabsContent value="bookings" className="mt-0">
+
+              <TabsContent value="bookings" className="h-full">
                 <BookingStatusChart />
               </TabsContent>
-              
-              <TabsContent value="providers" className="mt-0">
+
+              <TabsContent value="providers" className="h-full">
                 <ProviderPerformanceTable />
               </TabsContent>
             </CardContent>
           </Card>
-          
-          <div className="col-span-7 lg:col-span-2">
+
+          {/* Sidebar Quick Stats */}
+          <div className="col-span-7 lg:col-span-2 flex flex-col gap-4">
             <Card>
               <CardHeader>
                 <CardTitle>Quick Stats</CardTitle>

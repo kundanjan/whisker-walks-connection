@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
@@ -48,23 +47,23 @@ export function RevenueChart() {
   return (
     <div className="space-y-4">
       <div className="flex space-x-2">
-        <Button 
-          variant={timeframe === "weekly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "weekly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("weekly")}
         >
           Weekly
         </Button>
-        <Button 
-          variant={timeframe === "monthly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "monthly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("monthly")}
         >
           Monthly
         </Button>
-        <Button 
-          variant={timeframe === "yearly" ? "default" : "outline"} 
-          size="sm" 
+        <Button
+          variant={timeframe === "yearly" ? "default" : "outline"}
+          size="sm"
           onClick={() => setTimeframe("yearly")}
         >
           Yearly
@@ -73,18 +72,16 @@ export function RevenueChart() {
       <div className="h-[300px]">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data[timeframe]} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+            <AreaChart data={data[timeframe]} margin={{ top: 20, right: 30, left: 20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis 
-                tickFormatter={(value) => `$${value}`}
-              />
+              <YAxis tickFormatter={(value) => `$${value}`} />
               <ChartTooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
