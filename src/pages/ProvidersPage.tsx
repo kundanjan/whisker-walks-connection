@@ -6,33 +6,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { fetchProviders, fetchUsers } from '@/services/api';
 import { Provider, User } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
 
 const ProvidersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [serviceFilter, setServiceFilter] = useState<string | null>(null);
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [providersData, usersData] = await Promise.all([
-          fetchProviders(),
-          fetchUsers()
-        ]);
-        
-        setProviders(providersData);
-        setUsers(usersData);
-      } catch (error) {
-        console.error('Error loading providers:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadData();
-  }, []);
+  const { data: providers = [], isLoading: isLoadingProviders } = useQuery({
+    queryKey: ['providers'],
+    queryFn: fetchProviders,
+    onError: (error) => {
+      console.error('Error fetching providers:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load providers. Please try again later.',
+        variant: 'destructive',
+      });
+    }
+  });
+
+  const { data: users = [], isLoading: isLoadingUsers } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    onError: (error) => {
+      console.error('Error fetching users:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load user data. Please try again later.',
+        variant: 'destructive',
+      });
+    }
+  });
 
   // Find the user associated with each provider
   const providersWithUsers = providers.map(provider => {
@@ -64,13 +70,7 @@ const ProvidersPage = () => {
     { label: 'Veterinary', value: 'veterinary' },
   ];
 
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <p>Loading providers...</p>
-      </div>
-    );
-  }
+  const isLoading = isLoadingProviders || isLoadingUsers;
 
   return (
     <>
@@ -115,68 +115,74 @@ const ProvidersPage = () => {
         </div>
         
         {/* Provider List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProviders.length > 0 ? (
-            filteredProviders.map(provider => (
-              <Link key={provider.id} to={`/providers/${provider.id}`}>
-                <div className="provider-card h-full hover:border-brand-blue">
-                  <div className="flex items-start gap-4 mb-4">
-                    <img
-                      src={provider.user?.avatar || '/placeholder.svg'}
-                      alt={provider.user?.name}
-                      className="h-16 w-16 rounded-full object-cover"
-                    />
+        {isLoading ? (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+            <p>Loading providers...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProviders.length > 0 ? (
+              filteredProviders.map(provider => (
+                <Link key={provider.id} to={`/providers/${provider.id}`}>
+                  <div className="provider-card h-full hover:border-brand-blue">
+                    <div className="flex items-start gap-4 mb-4">
+                      <img
+                        src={provider.user?.avatar || '/placeholder.svg'}
+                        alt={provider.user?.name}
+                        className="h-16 w-16 rounded-full object-cover"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-lg">{provider.user?.name}</h3>
+                          {provider.verified && (
+                            <div className="flex items-center text-green-600">
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              <span className="text-xs font-medium">Verified</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                          <span>{provider.rating}</span>
+                          <span className="text-gray-500 ml-1">({provider.reviewCount} reviews)</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start text-sm text-gray-500 mb-4">
+                      <MapPin className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
+                      <span>{provider.serviceArea}</span>
+                    </div>
+                    
+                    <p className="text-gray-600 line-clamp-3 mb-4">{provider.bio}</p>
+                    
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-lg">{provider.user?.name}</h3>
-                        {provider.verified && (
-                          <div className="flex items-center text-green-600">
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            <span className="text-xs font-medium">Verified</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>{provider.rating}</span>
-                        <span className="text-gray-500 ml-1">({provider.reviewCount} reviews)</span>
+                      <h4 className="font-medium text-sm mb-2">Specialties:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {provider.specialties.map((specialty, index) => (
+                          <span
+                            key={index}
+                            className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-start text-sm text-gray-500 mb-4">
-                    <MapPin className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
-                    <span>{provider.serviceArea}</span>
-                  </div>
-                  
-                  <p className="text-gray-600 line-clamp-3 mb-4">{provider.bio}</p>
-                  
-                  <div>
-                    <h4 className="font-medium text-sm mb-2">Specialties:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {provider.specialties.map((specialty, index) => (
-                        <span
-                          key={index}
-                          className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <div className="col-span-3 text-center py-12">
-              <h3 className="text-xl font-medium text-gray-700 mb-2">No providers match your criteria</h3>
-              <p className="text-gray-500 mb-4">Try adjusting your filters or search term</p>
-              <Button variant="outline" onClick={() => { setSearchTerm(''); setServiceFilter(null); }}>
-                Clear Filters
-              </Button>
-            </div>
-          )}
-        </div>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-12">
+                <h3 className="text-xl font-medium text-gray-700 mb-2">No providers match your criteria</h3>
+                <p className="text-gray-500 mb-4">Try adjusting your filters or search term</p>
+                <Button variant="outline" onClick={() => { setSearchTerm(''); setServiceFilter(null); }}>
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
