@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,50 +16,32 @@ const ProvidersPage = () => {
   const { data: providers = [], isLoading: isLoadingProviders } = useQuery({
     queryKey: ['providers'],
     queryFn: fetchProviders,
-    onSuccess: (data) => {
-      console.log('Providers fetched successfully:', data.length);
-    },
-    onError: (error: Error) => {
-      console.error('Error fetching providers:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load providers. Please try again later.',
-        variant: 'destructive',
-      });
-    }
   });
+
+  if (providers.length > 0) {
+    console.log('Providers fetched successfully:', providers.length);
+  }
 
   const { data: users = [], isLoading: isLoadingUsers } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers,
-    onSuccess: (data) => {
-      console.log('Users fetched successfully:', data.length);
-    },
-    onError: (error: Error) => {
-      console.error('Error fetching users:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load user data. Please try again later.',
-        variant: 'destructive',
-      });
-    }
   });
 
-  // Find the user associated with each provider
+  if (users.length > 0) {
+    console.log('Users fetched successfully:', users.length);
+  }
+
   const providersWithUsers = providers.map(provider => {
     const user = users.find(u => u.id === provider.userId);
     return { ...provider, user };
   }).filter(p => p.user);
 
-  // Filter providers based on search term and service filter
   const filteredProviders = providersWithUsers.filter(provider => {
-    // Filter by search term
     const searchMatch = searchTerm === '' || 
       provider.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       provider.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
       provider.specialties.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    // Filter by service type
     const serviceMatch = !serviceFilter || serviceFilter === 'all' || provider.specialties.some(s => 
       s.toLowerCase().includes(serviceFilter.toLowerCase())
     );
@@ -90,10 +71,8 @@ const ProvidersPage = () => {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search bar */}
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <Input
@@ -104,7 +83,6 @@ const ProvidersPage = () => {
               />
             </div>
             
-            {/* Filter buttons */}
             <div className="flex flex-wrap gap-2">
               {serviceTypes.map(type => (
                 <Button
@@ -120,7 +98,6 @@ const ProvidersPage = () => {
           </div>
         </div>
         
-        {/* Provider List */}
         {isLoading ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
             <p>Loading providers...</p>
