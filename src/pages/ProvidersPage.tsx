@@ -17,7 +17,10 @@ const ProvidersPage = () => {
   const { data: providers = [], isLoading: isLoadingProviders } = useQuery({
     queryKey: ['providers'],
     queryFn: fetchProviders,
-    onError: (error) => {
+    onSuccess: (data) => {
+      console.log('Providers fetched successfully:', data.length);
+    },
+    onError: (error: Error) => {
       console.error('Error fetching providers:', error);
       toast({
         title: 'Error',
@@ -30,7 +33,10 @@ const ProvidersPage = () => {
   const { data: users = [], isLoading: isLoadingUsers } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers,
-    onError: (error) => {
+    onSuccess: (data) => {
+      console.log('Users fetched successfully:', data.length);
+    },
+    onError: (error: Error) => {
       console.error('Error fetching users:', error);
       toast({
         title: 'Error',
